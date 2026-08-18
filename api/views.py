@@ -1,9 +1,8 @@
 """Stores the views used in the API."""
 
 from datetime import UTC, datetime
-from typing import cast
 
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -43,16 +42,17 @@ class TabItemCreateView(generics.CreateAPIView):
         """Add a tab item to a tab and recalculate the tab's totals."""
         tab_id: int = self.kwargs["pk"]
 
-        check_valid_tab(tab_id=tab_id)
+        tab = check_valid_tab(tab_id=tab_id)
 
-        tab_item = cast("TabItem", serializer.save(tab_id=tab_id))
-        tab_item.tab.recalculate_and_save()
+        serializer.save(tab_id=tab_id) # type: ignore[reportUnknownMemberType]
+        tab.recalculate_and_save()
 
 
 class PaymentIntentCreateView(generics.CreateAPIView):
     """Create a payment intent for a tab."""
 
     def post(self, _request: Request, pk: int) -> Response:
+        """Create a payment intent for a tab."""
         tab = check_valid_tab(pk)
 
         res = MockPaymentGateway().create_payment_intent(amount_p=tab.total_p)
@@ -70,27 +70,50 @@ class PaymentIntentCreateView(generics.CreateAPIView):
             raise PaymentIntentFailureError(msg)
 
         serializer = PaymentSerializer(payment)
-        return Response(serializer.data, status=201)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class PaymentConfirmCreateView(generics.CreateAPIView):
-    """Create a payment confirmation for a tab."""
+    """Create a payment confirmation for a tab (Idempotent)."""
 
     def post(self, _request: Request, pk: int) -> Response:
+        """Confirm a payment intent for a tab."""
         tab = check_valid_tab(pk)
-        payment: Payment = tab.payments.filter(status=Payment.Status.PENDING).last()  # type: ignore[reportAttributeAccessIssue]
-        if not payment:
-            return Response({"error": "No payment to confirm."}, status=400)
+
+        if tab.status == Tab.Status.PAID.value:
+            return Response(
+                {"status": "Payment successful.", "note": "Already processed."},
+                status=status.HTTP_200_OK,
+            )
+
+        payment = Payment.objects.filter(
+            status=Payment.Status.PENDING, tab_id=tab.id
+        ).last()
+
+        if payment is None:
+            return Response(
+                {"error": "No pending payment intent found for this tab."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         res = MockPaymentGateway().confirm_payment_intent(
             intent_id=payment.payment_intent_id
         )
+
         payment.status = res["status"]
-        payment.save()
+        payment.save(update_fields=["status"])
 
         if res["status"] == Payment.Status.COMPLETED.value:
             tab.status = Tab.Status.PAID
             tab.closed_at = datetime.now(tz=UTC)
-            tab.save()
-            return Response({"status": "Payment successful."}, status=200)
-        return Response({"error": "Payment has failed."}, status=402)
+            tab.save(update_fields=["status", "closed_at"])
+
+            return Response(
+                {"status": "Payment successful."},
+                status=status.HTTP_200_OK,
+            )
+
+        return Response(
+            {"error": "Payment has failed."},
+            status=status.HTTP_402_PAYMENT_REQUIRED,
+        )
