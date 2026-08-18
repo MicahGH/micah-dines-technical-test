@@ -15,7 +15,7 @@ Powered by Django, Django REST Framework, PostgreSQL, Poetry, and Docker.
 - Python 3.13  
 - Django 5.x, Django REST Framework 3.x  
 - PostgreSQL 16 (Docker)  
-- Poetry for dependency management  
+- uv for dependency management  
 - pytest + pytest-django for testing  
 
 ## Setup
@@ -29,15 +29,14 @@ sh scripts/setup.sh
 What it does:
 
 1. Starts PostgreSQL in Docker
-2. Installs dependencies with Poetry  
-3. Adds the poetry-dotenv-plugin for automatic .env loading  
-4. Runs Django migrations
-5. Seeds some menu items for testing 
+2. Installs dependencies with uv  
+3. Runs Django migrations
+4. Seeds some menu items for testing 
 
 After doing this, you can run the server with this command:
 
 ```
-poetry run python manage.py runserver
+uv run python manage.py runserver
 ```
 
 Your API will be available at http://127.0.0.1:8000/api/.
@@ -66,7 +65,7 @@ Endpoint | Method | Description
 Run all tests with:
 
 ```
-poetry run pytest
+uv run pytest
 ```
 
 Tests include:
