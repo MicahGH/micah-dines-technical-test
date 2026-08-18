@@ -14,7 +14,7 @@ from api.serializers import (
     TabItemCreateSerializer,
     TabRetrieveSerializer,
 )
-from api.services.payments import MockPaymentGateway
+from api.services.payments import MockPaymentGatewayService
 from api.utils import check_valid_tab
 
 
@@ -44,7 +44,7 @@ class TabItemCreateView(generics.CreateAPIView):
 
         tab = check_valid_tab(tab_id=tab_id)
 
-        serializer.save(tab_id=tab_id) # type: ignore[reportUnknownMemberType]
+        serializer.save(tab_id=tab_id)  # type: ignore[reportUnknownMemberType]
         tab.recalculate_and_save()
 
 
@@ -55,7 +55,7 @@ class PaymentIntentCreateView(generics.CreateAPIView):
         """Create a payment intent for a tab."""
         tab = check_valid_tab(pk)
 
-        res = MockPaymentGateway().create_payment_intent(amount_p=tab.total_p)
+        res = MockPaymentGatewayService().create_payment_intent(amount_p=tab.total_p)
 
         payment = Payment.objects.create(
             tab=tab,
@@ -96,7 +96,7 @@ class PaymentConfirmCreateView(generics.CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        res = MockPaymentGateway().confirm_payment_intent(
+        res = MockPaymentGatewayService().confirm_payment_intent(
             intent_id=payment.payment_intent_id
         )
 

@@ -25,3 +25,11 @@ class PaymentIntentFailureError(APIException):
     status_code = 400
     default_detail = "Payment intent failed."
     default_code = "payment_failed"
+
+
+class TabNotFoundError(APIException):
+    """Error for when a tab is not found."""
+
+    status_code = 404
+    default_detail = "Tab not found."
+    default_code = "tab_not_found"

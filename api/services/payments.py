@@ -12,7 +12,7 @@ class PaymentIntentResponse(TypedDict):
     status: str
 
 
-class MockPaymentGateway:
+class MockPaymentGatewayService:
     """Class for a mock payment gateway used in the API."""
 
     FAILURE_VALUE_FOR_DEMO = 13
@@ -34,12 +34,9 @@ class MockPaymentGateway:
             "status": status,
         }
 
-    def confirm_payment_intent(
-        self, intent_id: uuid.UUID | str
-    ) -> PaymentIntentResponse:
+    def confirm_payment_intent(self, intent_id: uuid.UUID | str) -> dict[str, str]:
         """Create a dummy payment confirmation."""
         return {
             "id": str(intent_id),
             "status": Payment.Status.COMPLETED.value,
-            "client_secret": str(uuid.uuid4()),
         }
