@@ -11,23 +11,27 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
 
-  api:
+api:
     build: .
     container_name: django_api_container
-    command: python manage.py runserver 0.0.0.0:8000 --settings=config.settings.local
-    volumes:
-      - .:/app
     ports:
       - "8000:8000"
     environment:
-      - DJANGO_SECRET_KEY=tu_clave_secreta_local
+      - DJANGO_SECRET_KEY=""
       - DB_NAME=cafe_db
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_HOST=db
       - DB_PORT=5432
+    volumes:
+      - .:/app
+      - /app/.venv
     depends_on:
       - db
+    command: >
+      sh -c "uv run python manage.py migrate &&
+             uv run python manage.py seed_menu_items &&
+             uv run python manage.py runserver 0.0.0.0:8000 --settings=config.settings.local"
 
 volumes:
   pg_data:
