@@ -17,6 +17,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "black>=26.5.1",
+    "django-stubs>=6.1.0",
     "pre-commit>=4.6.1",
     "pyright>=1.1.411",
     "pytest>=9.1.1",
@@ -70,10 +71,11 @@ indent-style = "space"
 [tool.pyright]
 typeCheckingMode = "strict"
 
+# Deactivate only the generic inference checks in the ORM without losing strict type checking.
+reportUnknownMemberType = false
+reportUnknownVariableType = false
+reportUnknownArgumentType = false
 reportMissingTypeStubs = false
-reportUnknownMemberType = true
-reportUnknownArgumentType = true
-reportUnknownVariableType = true
 reportUnknownLambdaType = true
 reportUnknownParameterType = true
 

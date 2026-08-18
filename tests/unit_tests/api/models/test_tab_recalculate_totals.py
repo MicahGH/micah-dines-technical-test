@@ -2,9 +2,14 @@ import pytest
 
 from api.models import MenuItem, Tab, TabItem
 
+EXPECTED_SUBTOTAL = 980
+EXPECTED_SERVICE_CHARGE = 98
+EXPECTED_VAT_TOTAL = 140
+
 
 @pytest.mark.django_db
 def test_tab_recalculate_totals() -> None:
+    """Test that the tab recalculation logic works correctly."""
     # Given a tab with two items
     tab = Tab.objects.create(table_number=1, covers=2)
     coffee = MenuItem.objects.create(
@@ -37,7 +42,9 @@ def test_tab_recalculate_totals() -> None:
     tab.recalculate_and_save()
 
     # Then the totals are as expected
-    assert tab.subtotal_p == 980
-    assert tab.service_charge_p == 98
-    assert tab.vat_total_p == 140
-    assert tab.total_p == 980 + 98 + 140
+    assert tab.subtotal_p == EXPECTED_SUBTOTAL
+    assert tab.service_charge_p == EXPECTED_SERVICE_CHARGE
+    assert tab.vat_total_p == EXPECTED_VAT_TOTAL
+    assert (
+        tab.total_p == EXPECTED_SUBTOTAL + EXPECTED_SERVICE_CHARGE + EXPECTED_VAT_TOTAL
+    )

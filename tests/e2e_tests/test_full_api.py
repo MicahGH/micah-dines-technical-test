@@ -2,6 +2,7 @@ import os
 from typing import cast
 
 import pytest
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.test import APIClient
 
@@ -10,6 +11,7 @@ from api.models import MenuItem, Tab
 
 @pytest.mark.django_db
 def test_full_api_flow() -> None:
+    """Test the full API flow from creating a tab to taking a payment."""
     client = APIClient()
     client.credentials(HTTP_X_API_KEY=os.environ["API_KEY"])
 
@@ -32,9 +34,9 @@ def test_full_api_flow() -> None:
     )
 
     res_pi = cast("Response", client.post(f"/api/tabs/{tab.id}/payment_intent/"))
-    assert res_pi.status_code == 201
+    assert res_pi.status_code == status.HTTP_201_CREATED
 
     res_payment = cast("Response", client.post(f"/api/tabs/{tab.id}/take_payment/"))
-    assert res_payment.status_code == 200
+    assert res_payment.status_code == status.HTTP_200_OK
     tab.refresh_from_db()
     assert tab.status == Tab.Status.PAID
