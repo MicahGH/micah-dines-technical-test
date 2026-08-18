@@ -86,6 +86,3 @@ Tests include:
 - Unit tests for total calculations for a tab
 - Payment idempotency 
 - Full end-to-end flow: Open tab → Add items → Create payment intent → Take payment → Tab marked PAID
-
-## Notes
-I implemented this little café EPOS as part of a technical test. At the time of writing, I am not a Django fella at all, as I have much more experience with FastAPI. However, I really took the time to learn what I did here. Basically, I used AI very sparingly to create this which I'm sure will help me become a more robust Django (and Python) dev.
