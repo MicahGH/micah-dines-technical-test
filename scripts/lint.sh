@@ -2,3 +2,5 @@
 black .
 
 ruff check . --fix
+
+pyright .
