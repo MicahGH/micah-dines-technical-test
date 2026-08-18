@@ -19,9 +19,6 @@ venv/
 env/
 ENV/
 
-# Poetry cache (optional, usually system-wide)
-.cache/pypoetry/
-
 # Django stuff:
 *.log
 *.pot

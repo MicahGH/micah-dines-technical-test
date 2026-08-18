@@ -1,7 +1,7 @@
 # Café EPOS — Technical Test
 
 A small slice of a café EPOS system built for a technical test.  
-Powered by Django, Django REST Framework, PostgreSQL, Poetry, and Docker.
+Powered by Django, Django REST Framework, PostgreSQL, uv, and Docker.
 
 ## Features
 
