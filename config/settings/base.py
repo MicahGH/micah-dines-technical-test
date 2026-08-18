@@ -36,7 +36,7 @@ TEMPLATES: list[
     dict[str, list[str] | str | dict[str, list[str] | str | bool] | bool]
 ] = [
     {
-        "BACKEND": "django.template.backends.DjangoTemplates",
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {

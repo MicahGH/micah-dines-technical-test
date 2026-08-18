@@ -10,14 +10,20 @@ services:
       - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cafe_db"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
-api:
+  api:
     build: .
     container_name: django_api_container
     ports:
       - "8000:8000"
     environment:
-      - DJANGO_SECRET_KEY=""
+      - DJANGO_SETTINGS_MODULE=config.settings.local
+      - DJANGO_SECRET_KEY=django-insecure-dev-key-12345
       - DB_NAME=cafe_db
       - DB_USER=postgres
       - DB_PASSWORD=postgres
@@ -27,11 +33,12 @@ api:
       - .:/app
       - /app/.venv
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     command: >
       sh -c "uv run python manage.py migrate &&
              uv run python manage.py seed_menu_items &&
-             uv run python manage.py runserver 0.0.0.0:8000 --settings=config.settings.local"
+             uv run python manage.py runserver 0.0.0.0:8000"
 
 volumes:
   pg_data:

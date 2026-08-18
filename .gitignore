@@ -29,11 +29,6 @@ db.sqlite3
 media/
 staticfiles/
 
-# Django migrations (optional to ignore)
-api/migrations/
-*/migrations/
-!*/migrations/__init__.py
-
 # VSCode settings
 .vscode/
 
