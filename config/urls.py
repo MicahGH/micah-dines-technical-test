@@ -15,7 +15,9 @@ BASE_TABS_PATH = "tabs/"
 
 urlpatterns = [
     path(BASE_API_PATH + BASE_TABS_PATH, TabCreateView.as_view()),
-    path(BASE_API_PATH + BASE_TABS_PATH + "<int:pk>/items/", TabItemCreateView.as_view()),
+    path(
+        BASE_API_PATH + BASE_TABS_PATH + "<int:pk>/items/", TabItemCreateView.as_view()
+    ),
     path(BASE_API_PATH + BASE_TABS_PATH + "<int:pk>/", TabRetrieveView.as_view()),
     path(
         BASE_API_PATH + BASE_TABS_PATH + "<int:pk>/payment_intent/",

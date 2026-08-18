@@ -1,13 +1,18 @@
 import pytest
-from api.models import Tab, TabItem, MenuItem
+
+from api.models import MenuItem, Tab, TabItem
 
 
 @pytest.mark.django_db
 def test_tab_recalculate_totals() -> None:
     # Given a tab with two items
     tab = Tab.objects.create(table_number=1, covers=2)
-    coffee = MenuItem.objects.create(name="Coffee", unit_price_p=350, vat_rate_percent=20.0)
-    croissant = MenuItem.objects.create(name="Croissant", unit_price_p=280, vat_rate_percent=0.0)
+    coffee = MenuItem.objects.create(
+        name="Coffee", unit_price_p=350, vat_rate_percent=20.0
+    )
+    croissant = MenuItem.objects.create(
+        name="Croissant", unit_price_p=280, vat_rate_percent=0.0
+    )
 
     TabItem.objects.create(
         tab=tab,

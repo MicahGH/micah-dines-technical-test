@@ -11,17 +11,14 @@ docker rm -f pg_cafe_db_container
 docker compose up -d --remove-orphans
 
 echo "Installing dependencies..."
-poetry install --no-root
-
-echo "Adding dotenv plugin (if not installed)..."
-poetry self add poetry-dotenv-plugin || true
+uv sync
 
 echo "Running migrations..."
-poetry run python manage.py makemigrations
-poetry run python manage.py migrate
+uv run python manage.py makemigrations
+uv run python manage.py migrate
 
 echo "Seeding menu items..."
-poetry run python manage.py seed_menu_items
+uv run python manage.py seed_menu_items
 
 echo "All done! You can now run the server with:"
-echo "poetry run python manage.py runserver"
+echo "uv run python manage.py runserver"

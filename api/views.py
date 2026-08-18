@@ -1,7 +1,9 @@
 """Stores the views used in the API."""
 
 from datetime import UTC, datetime
+
 from rest_framework import generics
+from rest_framework.response import Response
 
 from api.errors import PaymentIntentFailureError
 from api.mock_payment_gateway import MockPaymentGateway
@@ -13,7 +15,6 @@ from api.serializers import (
     TabRetrieveSerializer,
 )
 from api.utils import check_valid_tab
-from rest_framework.response import Response
 
 
 class TabCreateView(generics.CreateAPIView):
@@ -79,7 +80,9 @@ class PaymentConfirmCreateView(generics.CreateAPIView):
         if not payment:
             return Response({"error": "No payment to confirm."}, status=400)
 
-        res = MockPaymentGateway().confirm_payment_intent(intent_id=payment.payment_intent_id)
+        res = MockPaymentGateway().confirm_payment_intent(
+            intent_id=payment.payment_intent_id
+        )
         payment.status = res["status"]
         payment.save()
 
@@ -88,5 +91,4 @@ class PaymentConfirmCreateView(generics.CreateAPIView):
             tab.closed_at = datetime.now(tz=UTC)
             tab.save()
             return Response({"status": "Payment successful."}, status=200)
-        else:
-            return Response({"error": "Payment has failed."}, status=402)
+        return Response({"error": "Payment has failed."}, status=402)

@@ -12,41 +12,68 @@ dependencies = [
     "djangorestframework (>=3.16.1,<4.0.0)",
     "psycopg2-binary (>=2.9.10,<3.0.0)"
 ]
-package-mode = false
 
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.black]
-line-length = 100
-target-version = ['py313']
-
-[tool.ruff]
-line-length = 100
-target-version = "py313"
-exclude = [
-    ".git",
-    "__pycache__",
-    ".venv",
-    "build",
-    "dist",
-    "api/migrations",
-    "__init__.py",
-]
-
-[tool.lint]
-select = [
-    "E",
-    "F",
-    "B",
-    "I",
-    "D",
-]
 [dependency-groups]
 dev = [
-    "pytest (>=8.4.2,<9.0.0)",
-    "pytest-django (>=4.11.1,<5.0.0)",
-    "black (>=25.9.0,<26.0.0)",
-    "ruff (>=0.13.1,<0.14.0)"
+    "black>=26.5.1",
+    "pre-commit>=4.6.1",
+    "pyright>=1.1.411",
+    "ruff>=0.16.1",
 ]
+
+[tool.black]
+line-length = 88
+target-version = ["py314"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "TD002",
+    "TD003",
+    "FIX002",
+
+    "COM812",
+    "ISC001",
+
+    "D100",
+    "D104",
+    "D105",
+    "D107",
+
+    "CPY001",
+
+    "N999",
+
+    "TC003",
+    "TC002",
+    "TC001",
+
+    "S101",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.pyright]
+typeCheckingMode = "strict"
+
+reportMissingTypeStubs = false
+reportUnknownMemberType = true
+reportUnknownArgumentType = true
+reportUnknownVariableType = true
+reportUnknownLambdaType = true
+reportUnknownParameterType = true
+
+reportUnusedImport = true
+reportUnusedVariable = true
+reportUnusedFunction = true
+
+pythonVersion = "3.14"
