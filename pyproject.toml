@@ -3,7 +3,7 @@ name = "cafe-epos"
 version = "0.1.0"
 description = "A small part of a café's EPOS system."
 authors = [
-    {name = "MicahGH", email = "miicah.shiiels@gmail.com"}
+    {name = "MicahGH"}
 ]
 readme = "README.md"
 requires-python = ">=3.11"
