@@ -34,7 +34,7 @@ def test_tab_recalculate_totals() -> None:
     )
 
     # When we recalculate the totals
-    tab.recalculate_totals()
+    tab.recalculate_and_save()
 
     # Then the totals are as expected
     assert tab.subtotal_p == 980

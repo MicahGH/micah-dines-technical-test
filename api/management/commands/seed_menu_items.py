@@ -11,9 +11,12 @@ MENU_ITEMS = [
 
 
 class Command(BaseCommand):
+    """Command to seed menu items for the café EPOS."""
+
     help = "Seed menu items for the café EPOS."
 
-    def handle(self, *args, **kwargs) -> None:
+    def handle(self) -> None:
+        """Seed the menu items."""
         for item in MENU_ITEMS:
             obj, created = MenuItem.objects.get_or_create(
                 name=item["name"],

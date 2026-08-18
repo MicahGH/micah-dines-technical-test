@@ -1,12 +1,13 @@
 """Stores the views used in the API."""
 
 from datetime import UTC, datetime
+from typing import cast
+from urllib.request import Request
 
 from rest_framework import generics
 from rest_framework.response import Response
 
 from api.errors import PaymentIntentFailureError
-from api.mock_payment_gateway import MockPaymentGateway
 from api.models import Payment, Tab, TabItem
 from api.serializers import (
     PaymentSerializer,
@@ -14,6 +15,7 @@ from api.serializers import (
     TabItemCreateSerializer,
     TabRetrieveSerializer,
 )
+from api.services.payments import MockPaymentGateway
 from api.utils import check_valid_tab
 
 
@@ -43,14 +45,14 @@ class TabItemCreateView(generics.CreateAPIView):
 
         check_valid_tab(tab_id=tab_id)
 
-        tab_item: TabItem = serializer.save(tab_id=tab_id)
-        tab_item.tab.recalculate_totals()
+        tab_item = cast("TabItem", serializer.save(tab_id=tab_id))
+        tab_item.tab.recalculate_and_save()
 
 
 class PaymentIntentCreateView(generics.CreateAPIView):
     """Create a payment intent for a tab."""
 
-    def post(self, request, pk: int) -> Response:
+    def post(self, _request: Request, pk: int) -> Response:
         tab = check_valid_tab(pk)
 
         res = MockPaymentGateway().create_payment_intent(amount_p=tab.total_p)
@@ -74,7 +76,7 @@ class PaymentIntentCreateView(generics.CreateAPIView):
 class PaymentConfirmCreateView(generics.CreateAPIView):
     """Create a payment confirmation for a tab."""
 
-    def post(self, request, pk) -> Response:
+    def post(self, _request: Request, pk: int) -> Response:
         tab = check_valid_tab(pk)
         payment: Payment = tab.payments.filter(status=Payment.Status.PENDING).last()  # type: ignore[reportAttributeAccessIssue]
         if not payment:
