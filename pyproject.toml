@@ -31,7 +31,7 @@ target-version = ["py314"]
 line-length = 88
 target-version = "py314"
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "api/migrations/*.py" = ["ALL"]
 
 [tool.ruff.lint]
