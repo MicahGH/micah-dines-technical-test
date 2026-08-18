@@ -5,7 +5,7 @@ from rest_framework import serializers
 from api.models import MenuItem, Payment, Tab, TabItem
 
 
-class MenuItemRetrieveSerializer(serializers.ModelSerializer):
+class MenuItemRetrieveSerializer(serializers.ModelSerializer[MenuItem]):
     """Serializer for retrieving the data of an existing menu item."""
 
     class Meta:
@@ -15,7 +15,7 @@ class MenuItemRetrieveSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "unit_price_p", "vat_rate_percent")
 
 
-class TabItemCreateSerializer(serializers.ModelSerializer):
+class TabItemCreateSerializer(serializers.ModelSerializer[TabItem]):
     """Serializer for adding a new tab item to a tab."""
 
     class Meta:
@@ -27,7 +27,7 @@ class TabItemCreateSerializer(serializers.ModelSerializer):
         fields = ("menu_item", "qty")
 
 
-class TabItemRetrieveSerializer(serializers.ModelSerializer):
+class TabItemRetrieveSerializer(serializers.ModelSerializer[TabItem]):
     """Serializer for retrieving the data of an existing tab item."""
 
     name = serializers.CharField(source="menu_item.name", read_only=True)
@@ -46,7 +46,7 @@ class TabItemRetrieveSerializer(serializers.ModelSerializer):
         )
 
 
-class TabCreateSerializer(serializers.ModelSerializer):
+class TabCreateSerializer(serializers.ModelSerializer[Tab]):
     """Serializer for creating a new tab."""
 
     class Meta:
@@ -59,7 +59,7 @@ class TabCreateSerializer(serializers.ModelSerializer):
         fields = ("table_number", "covers")
 
 
-class TabRetrieveSerializer(serializers.ModelSerializer):
+class TabRetrieveSerializer(serializers.ModelSerializer[Tab]):
     """Serializer for retrieving the data of an existing tab."""
 
     items = TabItemRetrieveSerializer(many=True, read_only=True)
@@ -81,7 +81,7 @@ class TabRetrieveSerializer(serializers.ModelSerializer):
         )
 
 
-class PaymentSerializer(serializers.ModelSerializer):
+class PaymentSerializer(serializers.ModelSerializer[Payment]):
     """Serializer for the payment."""
 
     class Meta:
