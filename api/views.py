@@ -15,7 +15,7 @@ from api.serializers import (
     TabRetrieveSerializer,
 )
 from api.services.payments import MockPaymentGatewayService
-from api.utils import check_valid_tab
+from api.services.tab import TabService
 
 
 class TabCreateView(generics.CreateAPIView):
@@ -42,7 +42,7 @@ class TabItemCreateView(generics.CreateAPIView):
         """Add a tab item to a tab and recalculate the tab's totals."""
         tab_id: int = self.kwargs["pk"]
 
-        tab = check_valid_tab(tab_id=tab_id)
+        tab = TabService.get_open_tab_or_raise(tab_id=tab_id)
 
         serializer.save(tab_id=tab_id)  # type: ignore[reportUnknownMemberType]
         tab.recalculate_and_save()
@@ -53,7 +53,7 @@ class PaymentIntentCreateView(generics.CreateAPIView):
 
     def post(self, _request: Request, pk: int) -> Response:
         """Create a payment intent for a tab."""
-        tab = check_valid_tab(pk)
+        tab = TabService.get_open_tab_or_raise(tab_id=pk)
 
         res = MockPaymentGatewayService().create_payment_intent(amount_p=tab.total_p)
 
@@ -78,7 +78,7 @@ class PaymentConfirmCreateView(generics.CreateAPIView):
 
     def post(self, _request: Request, pk: int) -> Response:
         """Confirm a payment intent for a tab."""
-        tab = check_valid_tab(pk)
+        tab = TabService.get_open_tab_or_raise(tab_id=pk)
 
         if tab.status == Tab.Status.PAID.value:
             return Response(
