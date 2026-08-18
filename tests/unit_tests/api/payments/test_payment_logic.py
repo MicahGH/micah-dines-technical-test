@@ -1,9 +1,9 @@
 import uuid
 
 import pytest
+from api.mock_payment_gateway import MockPaymentGateway
 
 from api.errors import PaymentIntentFailureError
-from api.mock_payment_gateway import MockPaymentGateway
 from api.models import Payment, Tab
 
 

@@ -1,9 +1,9 @@
 """Stores permission logic for the API."""
 
 import os
-from urllib.request import Request
 
 from rest_framework.permissions import BasePermission
+from rest_framework.request import Request
 
 
 class HasAPIKey(BasePermission):
