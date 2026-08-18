@@ -4,7 +4,7 @@ import pytest
 
 from api.errors import PaymentIntentFailureError
 from api.models import Payment, Tab
-from api.services.payments import MockPaymentGatewayService
+from api.services.payment import MockPaymentGatewayService
 
 
 @pytest.mark.django_db

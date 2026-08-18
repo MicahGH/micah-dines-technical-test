@@ -14,7 +14,7 @@ from api.serializers import (
     TabItemCreateSerializer,
     TabRetrieveSerializer,
 )
-from api.services.payments import MockPaymentGatewayService
+from api.services.payment import MockPaymentGatewayService
 from api.services.tab import TabService
 
 
