@@ -20,26 +20,39 @@ Powered by Django, Django REST Framework, PostgreSQL, uv, and Docker.
 
 ## Setup
 
-The setup is fully automated via a bash script; run it in a bash shell:
+The application setup and execution are fully containerized with Docker Compose. Build and start the services with a single command:
 
-```
-sh scripts/setup.sh
-```
-
-What it does:
-
-1. Starts PostgreSQL in Docker
-2. Installs dependencies with uv  
-3. Runs Django migrations
-4. Seeds some menu items for testing 
-
-After doing this, you can run the server with this command:
-
-```
-uv run python manage.py runserver
+```bash
+docker compose up --build
 ```
 
-Your API will be available at http://127.0.0.1:8000/api/.
+### What it does:
+
+1. **Database Readiness:** Launches PostgreSQL 16 and waits for health checks to pass.
+2. **Container Build:** Builds the Django container using `uv` for multi-stage dependency installation.
+3. **Database Setup:** Applies database migrations automatically inside the container.
+4. **Data Seeding:** Seeds initial menu items into the database for testing.
+
+Once running, the API will be available at [http://127.0.0.1:8000/api/](http://127.0.0.1:8000/api/).
+
+---
+
+### Useful Commands
+
+* **View real-time logs:**
+  ```bash
+  docker compose logs -f
+  ```
+
+* **Stop containers:**
+  ```bash
+  docker compose down
+  ```
+
+* **Reset environment and database:**
+  ```bash
+  docker compose down -v
+  ```
 
 ## API Overview
 
