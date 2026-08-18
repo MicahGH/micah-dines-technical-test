@@ -12,7 +12,7 @@ class MenuItemRetrieveSerializer(serializers.ModelSerializer):
         """Metadata."""
 
         model = MenuItem
-        fields = "__all__"
+        fields = ("id", "name", "unit_price_p", "vat_rate_percent")
 
 
 class TabItemCreateSerializer(serializers.ModelSerializer):
@@ -21,8 +21,10 @@ class TabItemCreateSerializer(serializers.ModelSerializer):
     class Meta:
         """Metadata."""
 
+        qty = serializers.IntegerField(min_value=1)
+
         model = TabItem
-        fields = ["menu_item", "qty"]
+        fields = ("menu_item", "qty")
 
 
 class TabItemRetrieveSerializer(serializers.ModelSerializer):
@@ -34,14 +36,14 @@ class TabItemRetrieveSerializer(serializers.ModelSerializer):
         """Metadata."""
 
         model = TabItem
-        fields = [
+        fields = (
             "name",
             "qty",
             "unit_price_p",
             "vat_rate_percent",
             "vat_p",
             "line_total_p",
-        ]
+        )
 
 
 class TabCreateSerializer(serializers.ModelSerializer):
@@ -50,8 +52,11 @@ class TabCreateSerializer(serializers.ModelSerializer):
     class Meta:
         """Metadata."""
 
+        table_number = serializers.IntegerField(min_value=1)
+        covers = serializers.IntegerField(min_value=1)
+
         model = Tab
-        fields = ["table_number", "covers"]
+        fields = ("table_number", "covers")
 
 
 class TabRetrieveSerializer(serializers.ModelSerializer):
@@ -63,7 +68,7 @@ class TabRetrieveSerializer(serializers.ModelSerializer):
         """Metadata."""
 
         model = Tab
-        fields = [
+        fields = (
             "id",
             "table_number",
             "covers",
@@ -73,7 +78,7 @@ class TabRetrieveSerializer(serializers.ModelSerializer):
             "service_charge_p",
             "vat_total_p",
             "total_p",
-        ]
+        )
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -83,12 +88,12 @@ class PaymentSerializer(serializers.ModelSerializer):
         """Metadata."""
 
         model = Payment
-        fields = [
+        fields = (
             "id",
             "payment_intent_id",
             "client_secret",
             "status",
             "amount_p",
             "created_at",
-        ]
+        )
         read_only_fields = fields
